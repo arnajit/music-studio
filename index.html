@@ -45,6 +45,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hero .app{position:relative;color:var(--muted);font-size:.95rem;display:flex;justify-content:space-between;gap:6px 14px;flex-wrap:wrap}
 .hero h1{position:relative;font-size:clamp(2.3rem,8vw,4rem);font-weight:800;letter-spacing:-.025em;margin:10px 0 6px;line-height:1}
 .hero .sub{position:relative;color:var(--muted)}
+.back{color:var(--muted);text-decoration:none;font-weight:700}
+.back:hover{color:var(--ink)}
 
 .syncbtn{border:0;background:transparent;padding:0;cursor:pointer;color:var(--muted);font-size:.92rem;display:inline-flex;align-items:center;gap:7px}
 .syncbtn:hover{color:var(--ink)}
@@ -54,16 +56,23 @@ button,input,select,textarea{font:inherit;color:inherit}
 .syncbtn[data-s="offline"] .dot,.syncbtn[data-s="error"] .dot{background:var(--red)}
 
 .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:22px}
-@media (max-width:700px){.cards{grid-template-columns:1fr}}
+.cards.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:700px){.cards,.cards.two{grid-template-columns:1fr}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:4px}
 .card .lbl{color:var(--muted);font-size:.88rem}
 .card .big{font-family:var(--display);font-weight:700;font-size:1.35rem;line-height:1.2}
 .card .act{margin-top:auto;padding-top:10px;display:flex;gap:6px;flex-wrap:wrap}
 .card .clip{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--muted);font-size:.92rem}
+.upl{display:flex;gap:10px;align-items:baseline;color:inherit;text-decoration:none;padding:4px 0;border-top:1px solid var(--line)}
+.upl:first-of-type{border-top:0}
+.upl .d{font-weight:700;min-width:6.5em}
+.upl .t{color:var(--muted);font-size:.92rem}
+.upl .n{margin-left:auto;font-weight:700;text-align:right}
+.upl:hover .n{text-decoration:underline}
 
 .btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:700;font-size:.92rem;color:var(--ink);line-height:1.2}
 .btn:hover{border-color:var(--muted)}
-.btn:disabled{opacity:.6;cursor:wait}
+.btn:disabled{opacity:.5;cursor:default}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .btn.sm{padding:5px 10px;font-size:.85rem}
 .btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
@@ -81,6 +90,15 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
 .bar input{flex:1 1 220px;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 11px}
 
+.list{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stu{display:flex;align-items:center;gap:12px;padding:13px 16px;border-top:1px solid var(--line);flex-wrap:wrap;color:inherit;text-decoration:none}
+.stu:first-child{border-top:0}
+.stu:hover{background:var(--surface-2)}
+.stu .nm{font-weight:700;min-width:170px;display:flex;flex-direction:column;line-height:1.3}
+.stu .nm small{font-weight:400;color:var(--muted);font-size:.86rem}
+.stu .info{flex:1;color:var(--muted);font-size:.92rem;min-width:150px}
+.more{margin-top:14px}
+
 .entry{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
 .entry+.entry{margin-top:10px}
 .entry .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
@@ -91,15 +109,19 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .entry .sub b{color:var(--muted)}
 .entry .tools{display:flex;gap:4px;margin-top:8px;margin-left:-8px}
 
-.fees{background:var(--surface);border:1px solid var(--line);border-radius:12px}
 .fee{display:flex;align-items:center;gap:12px;padding:13px 16px;border-top:1px solid var(--line);flex-wrap:wrap}
 .fee:first-child{border-top:0}
-.fee .m{font-weight:700;min-width:140px}
+.fee .m{font-weight:700;min-width:140px;color:inherit;text-decoration:none}
+a.m:hover{text-decoration:underline}
 .fee .info{flex:1;color:var(--muted);font-size:.92rem;min-width:150px}
 .total{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;color:var(--muted)}
 .total strong{color:var(--ink);font-family:var(--display);font-size:1.15rem}
+.monthnav{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.monthnav h3{font-size:1.15rem;min-width:9.5em;text-align:center}
 
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.panel+.panel{margin-top:12px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
 dl{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;margin:0}
 dt{color:var(--muted)} dd{margin:0;font-weight:700;text-align:right;white-space:pre-wrap}
 .empty{border:1px dashed var(--line);border-radius:12px;padding:22px;color:var(--muted);text-align:center}
@@ -138,16 +160,18 @@ dt{color:var(--muted)} dd{margin:0;font-weight:700;text-align:right;white-space:
 <div id="app"></div>
 <div id="modal-root"></div>
 <div id="toast" role="status" aria-live="polite"></div>
+<datalist id="instruments"><option>Keyboard/Piano</option><option>Guitar</option><option>Vocals</option><option>Violin</option><option>Tabla</option><option>Harmonium</option><option>Flute</option><option>Drums</option><option>Ukulele</option></datalist>
 <script>
 "use strict";
-const KEY = 'my-music-studio-simple-v1';       // local copy (also lets old data move into the sheet)
-const CFG_KEY = 'my-music-studio-sync-v1';     // web app URL + passcode for this device
-const OUT_KEY = 'my-music-studio-outbox-v1';   // changes not yet saved to the sheet
+const KEY = 'my-music-studio-v2';               // local copy
+const OLD_KEY = 'my-music-studio-simple-v1';    // one-student version, moved over on first load
+const CFG_KEY = 'my-music-studio-sync-v1';      // web app URL + passcode for this device
+const OUT_KEY = 'my-music-studio-outbox-v2';    // changes not yet saved to the sheet
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const METHODS = ['UPI','Cash','Bank Transfer'];
-const EMPTY = () => ({ student:null, next:null, classes:{}, fees:{} });
+const EMPTY = () => ({ students:{}, classes:{}, fees:{} });
 let S = EMPTY();
-let tab = 'classes', q = '';
+let homeTab = 'students', stuTab = 'classes', rq = '', cq = '', showPast = false, feeMonth = null;
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
@@ -156,28 +180,42 @@ const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,6
 const p2 = n => String(n).padStart(2,'0');
 const iso = d => d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
 const today = () => iso(new Date());
+const thisMonth = () => today().slice(0,7);
 const parseD = s => new Date(s+'T00:00:00');
 const addDays = (s,n) => { const d=parseD(s); d.setDate(d.getDate()+n); return iso(d); };
 const fmtDate = s => s ? parseD(s).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '—';
 const fmtDay = s => s ? parseD(s).toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'}) : '—';
+const dayLabel = s => s===today() ? 'Today' : s===addDays(today(),1) ? 'Tomorrow' : fmtDay(s);
 const fmtMonth = ym => new Date(ym+'-01T00:00:00').toLocaleDateString('en-IN',{month:'long',year:'numeric'});
 const fmtTime = t => t ? new Date('1970-01-01T'+t+':00').toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit'}) : '';
 const inr = n => '₹' + Number(n||0).toLocaleString('en-IN');
 const nextMonth = ym => { const [y,m]=ym.split('-').map(Number); return m===12 ? (y+1)+'-01' : y+'-'+p2(m+1); };
+const prevMonth = ym => { const [y,m]=ym.split('-').map(Number); return m===1 ? (y-1)+'-12' : y+'-'+p2(m-1); };
 const readJSON = k => { try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } };
 const writeJSON = (k,v) => { try { v==null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
-const normal = d => ({ student:d?.student||null, next:d?.next||null, classes:d?.classes||{}, fees:d?.fees||{} });
+const normal = d => ({ students:d?.students||{}, classes:d?.classes||{}, fees:d?.fees||{} });
+const clone = o => JSON.parse(JSON.stringify(o));
 function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>t.classList.remove('show'),2400); }
 
 /* ---------- local copy ---------- */
-function load(){ const r=readJSON(KEY); if (r) S=normal(r); }
+function fromV1(o){
+  const id=uid(), d=EMPTY();
+  d.students[id] = { id, instrument:'Keyboard/Piano', ...o.student, next:o.next||null, leftDate:'' };
+  Object.values(o.classes||{}).forEach(c => { d.classes[c.id] = {...c, studentId:id}; });
+  Object.entries(o.fees||{}).forEach(([m,f]) => { const k=id+'_'+m; d.fees[k] = {...f, id:k, studentId:id, month:m}; });
+  return d;
+}
+function load(){
+  const r=readJSON(KEY); if (r){ S=normal(r); return; }
+  const o=readJSON(OLD_KEY); if (o && o.student){ S=fromV1(o); save(); }
+}
 function save(){ writeJSON(KEY, S); }
 
 /* ---------- Google Sheet sync ---------- */
 let cfg = readJSON(CFG_KEY);                 // {url, key}
 let outbox = readJSON(OUT_KEY) || [];
 let sync = { state:'ok', msg:'' };
-let remote = { checked:false, err:'' };      // has this device loaded from the sheet yet?
+let remote = { checked:false, err:'' };
 let seq = 0, flushP = null, refreshing = false;
 
 async function api(action, data={}, c=cfg){
@@ -188,14 +226,16 @@ async function api(action, data={}, c=cfg){
   } catch(e){ throw new Error('offline'); }
   let j;
   try { j = await res.json(); }
-  catch(e){ const er=new Error('The web app didn’t send back data. Check it’s deployed with access for “Anyone”.'); er.server=true; throw er; }
-  if (!j.ok){ const er=new Error(j.error||'Unknown error'); er.server=true; throw er; }
+  catch(e){ const er=new Error('The web app didn’t send back data. Check it’s deployed with access for “Anyone”'); er.server=true; throw er; }
+  if (!j.ok){
+    const er=new Error(/^Unknown action/.test(j.error||'') ? 'Your Apps Script is out of date. Paste in the new Code.gs and deploy a new version' : (j.error||'Unknown error'));
+    er.server=true; throw er;
+  }
   return j;
 }
 
-/* Every change is queued, then sent in order. If you're offline it waits and retries. */
 function push(action, data){
-  outbox.push(JSON.parse(JSON.stringify({ action, ...data })));
+  outbox.push(clone({ action, ...data }));
   seq++; writeJSON(OUT_KEY, outbox); flush();
 }
 function flush(){ if (!flushP) flushP = doFlush().finally(()=>{ flushP=null; }); return flushP; }
@@ -209,8 +249,6 @@ async function doFlush(){
   }
   setSync('ok'); return true;
 }
-
-/* Send waiting changes, then pull the latest from the sheet. */
 async function refresh(){
   if (!cfg || refreshing) return;
   refreshing = true;
@@ -218,9 +256,9 @@ async function refresh(){
     if (!(await flush())){ firstLoadFailed(); return; }
     const s0 = seq; setSync('loading');
     let j;
-    try { j = await api('get'); }
+    try { j = await api('load'); }
     catch(e){ setSync(e.server?'error':'offline', e.server?e.message:''); firstLoadFailed(); return; }
-    if (seq !== s0 || outbox.length){ flush(); return; }   // you changed something meanwhile; keep yours
+    if (seq !== s0 || outbox.length){ flush(); return; }
     const before = JSON.stringify(S);
     S = normal(j.data); save();
     const first = !remote.checked; remote = { checked:true, err:'' };
@@ -231,9 +269,8 @@ async function refresh(){
 function firstLoadFailed(){
   if (remote.checked) return;
   remote.err = sync.state==='error' ? sync.msg : 'Can’t reach the Google Sheet. Check your internet connection.';
-  if (!S.student) render();
+  if (!stuList().length) render();
 }
-
 function syncText(){
   const n = outbox.length, w = n+' change'+(n===1?'':'s')+' waiting';
   switch (sync.state){
@@ -258,26 +295,37 @@ function syncPanelInner(){
 }
 
 /* ---------- derived ---------- */
-const classes = () => Object.values(S.classes).sort((a,b)=>(b.date+(b.time||'')).localeCompare(a.date+(a.time||'')));
-const hasClassOn = d => Object.values(S.classes).some(c=>c.date===d);
-function nextClass(){
+const stuList = () => Object.values(S.students).sort((a,b)=>String(a.name).localeCompare(String(b.name),'en',{sensitivity:'base'}));
+const classesOf = id => Object.values(S.classes).filter(c=>c.studentId===id).sort((a,b)=>(b.date+(b.time||'')).localeCompare(a.date+(a.time||'')));
+const hasClassOn = (id,d) => Object.values(S.classes).some(c=>c.studentId===id && c.date===d);
+function nextClass(st){
+  if (!st || st.leftDate) return null;
   const t = today();
-  if (S.next && S.next.date >= t && !hasClassOn(S.next.date)) return {...S.next, custom:true};
-  const st = S.student; if (!st || st.day==='' || st.day==null) return null;
-  for (let i=0;i<8;i++){ const d=addDays(t,i); if (parseD(d).getDay()===Number(st.day) && !hasClassOn(d)) return {date:d, time:st.time, custom:false}; }
+  if (st.next && st.next.date >= t && !hasClassOn(st.id, st.next.date)) return {...st.next, custom:true};
+  if (st.day==='' || st.day==null) return null;
+  for (let i=0;i<8;i++){ const d=addDays(t,i); if (parseD(d).getDay()===Number(st.day) && !hasClassOn(st.id,d)) return {date:d, time:st.time, custom:false}; }
   return null;
 }
-function months(){
-  const out=[]; let m=(S.student.joinDate||today()).slice(0,7); const end=today().slice(0,7);
+const endMonth = st => { const t=thisMonth(); return st.leftDate && st.leftDate.slice(0,7)<t ? st.leftDate.slice(0,7) : t; };
+const inMonth = (st,m) => (st.joinDate||today()).slice(0,7)<=m && (!st.leftDate || st.leftDate.slice(0,7)>=m);
+function monthsOf(st){
+  const out=[]; let m=(st.joinDate||today()).slice(0,7); const end=endMonth(st);
   while (m<=end && out.length<240){ out.push(m); m=nextMonth(m); }
   return out.reverse();
 }
-function feeInfo(m){
-  const r=S.fees[m]||{}, due=Number(r.due ?? S.student.fee ?? 0), paid=Number(r.amount||0);
+const fk = (id,m) => id+'_'+m;
+function feeInfo(st,m){
+  const r=S.fees[fk(st.id,m)]||{}, due=Number(r.due ?? st.fee ?? 0), paid=Number(r.amount||0);
   const status = paid>=due && due>0 ? 'Paid' : paid>0 ? 'Part paid' : 'Not paid';
   return {...r, month:m, due, paid, bal:Math.max(0,due-paid), status};
 }
+const pendingOf = st => monthsOf(st).reduce((s,m)=>s+feeInfo(st,m).bal,0);
 const tone = s => s==='Paid'?'good':s==='Part paid'?'warn':'bad';
+const usual = st => `${esc(DAYS[st.day]||'')}s${st.time?' at '+fmtTime(st.time):''}`;
+
+/* ---------- routing: #student-<id> opens a student ---------- */
+function route(){ const m=/^#student-([a-z0-9]+)$/.exec(location.hash); return m && S.students[m[1]] ? S.students[m[1]] : null; }
+window.addEventListener('hashchange', () => { stuTab='classes'; cq=''; close(); render(); window.scrollTo(0,0); });
 
 /* ---------- modal ---------- */
 const fld = (name,label,val='',type='text',extra='') => `<label class="fld"><span>${label}</span><input name="${name}" type="${type}" value="${esc(val)}" ${extra}></label>`;
@@ -300,10 +348,30 @@ function confirmBox(msg, yes, fn){
 document.addEventListener('keydown', e => { if (e.key==='Escape') close(); });
 
 /* ---------- forms ---------- */
-function classForm(c){
-  const nc = nextClass();
-  const d = c || {id:uid(), date:today(), time: (nc && nc.date===today() ? nc.time : S.student.time) || '', did:'', homework:'', notes:''};
-  openModal({ title: c?'Edit class':'Add a class', ok: c?'Save changes':'Save class',
+function putStudent(st){ S.students[st.id]=st; save(); push('putStudent', {student:st}); }
+
+function studentForm(st){
+  const last = stuList().slice(-1)[0];
+  const s = st || {name:'', instrument:last?.instrument||'Keyboard/Piano', phone:'', joinDate:today(), fee:last?.fee||1000, day:new Date().getDay(), time:last?.time||'17:00', notes:''};
+  openModal({ title: st?'Edit student':'Add a student', ok: st?'Save changes':'Add student',
+    body: `${fld('name','Student name',s.name)}
+      <div class="row">${fld('instrument','Instrument',s.instrument,'text','list="instruments"')}${fld('phone','Phone <em>(optional)</em>',s.phone,'tel')}</div>
+      <div class="row">${fld('joinDate','Joined on',s.joinDate,'date')}${fld('fee','Monthly fee (₹)',s.fee,'number','min="0" step="1" inputmode="numeric"')}</div>
+      <div class="row"><label class="fld"><span>Usual class day</span><select name="day">${DAYS.map((d,i)=>`<option value="${i}" ${Number(s.day)===i?'selected':''}>${d}</option>`).join('')}</select></label>${fld('time','Usual time',s.time,'time')}</div>
+      ${area('notes','Notes <em>(optional)</em>',s.notes,3)}`,
+    onSave: v => {
+      if (!v.name.trim()){ toast('Enter the student’s name'); return false; }
+      const rec = { id: st?.id || uid(), next: st?.next || null, leftDate: st?.leftDate || '',
+        ...v, name:v.name.trim(), instrument:v.instrument.trim(), fee:Number(v.fee||0), day:Number(v.day) };
+      putStudent(rec);
+      if (st){ toast('Saved'); render(); }
+      else { toast(rec.name+' added'); location.hash='student-'+rec.id; }
+    }});
+}
+function classForm(st, c){
+  const nc = nextClass(st);
+  const d = c || {id:uid(), studentId:st.id, date:today(), time:(nc && nc.date===today() ? nc.time : st.time) || '', did:'', homework:'', notes:''};
+  openModal({ title: c?'Edit class':'Add a class for '+esc(st.name), ok: c?'Save changes':'Save class',
     body: `<div class="row">${fld('date','Date',d.date,'date')}${fld('time','Time',d.time,'time')}</div>
       ${area('did','What we did',d.did,6,'Revised C, F and G chords. Transitions still slow. Started the new song intro.')}
       ${area('homework','Homework <em>(optional)</em>',d.homework,2,'Practise C–F–G changes, 15 minutes daily')}
@@ -312,44 +380,42 @@ function classForm(c){
     onSave: v => {
       if (!v.date){ toast('Choose a date'); return false; }
       if (!v.did.trim()){ toast('Write what you did in this class'); return false; }
-      S.classes[d.id] = {...d, ...v}; save(); push('saveClass', {cls:S.classes[d.id]});
+      S.classes[d.id] = {...d, ...v}; save(); push('putClass', {cls:S.classes[d.id]});
       toast(c?'Class updated':'Class saved'); render();
     }});
 }
-function nextForm(){
-  const nc = nextClass() || {date:today(), time:S.student.time||''};
-  openModal({ title:'Next class', ok:'Save',
+function nextForm(st){
+  const nc = nextClass(st) || {date:today(), time:st.time||''};
+  openModal({ title:'Next class for '+esc(st.name), ok:'Save',
     body: `<div class="row">${fld('date','Date',nc.date,'date')}${fld('time','Time',nc.time,'time')}</div>
-      <p class="hint">Change this whenever the day or time moves. Once that class is recorded, it goes back to the usual ${esc(DAYS[S.student.day]||'day')}.</p>`,
-    left: S.next ? `<button type="button" class="btn ghost" data-act="resetNext">Use usual day</button>` : '',
+      <p class="hint">Change this whenever the day or time moves. Once that class is recorded, it goes back to the usual ${esc(DAYS[st.day]||'day')}.</p>`,
+    left: st.next ? `<button type="button" class="btn ghost" data-act="resetNext" data-id="${st.id}">Use usual day</button>` : '',
     onSave: v => { if(!v.date){ toast('Choose a date'); return false; }
-      S.next={date:v.date,time:v.time}; save(); push('saveNext', {next:S.next}); toast('Next class set'); render(); }});
+      putStudent({...st, next:{date:v.date, time:v.time}}); toast('Next class set'); render(); }});
 }
-function feeForm(m){
-  const f = feeInfo(m);
-  openModal({ title:'Fee for '+fmtMonth(m), ok:'Save',
+function feeForm(st, m){
+  const f = feeInfo(st, m), k = fk(st.id, m);
+  openModal({ title:`${esc(st.name)}, ${fmtMonth(m)} fee`, ok:'Save',
     body: `<div class="row">${fld('amount','Amount paid (₹)',f.paid||f.due,'number','min="0" step="1" inputmode="numeric"')}${fld('date','Paid on',f.date||today(),'date')}</div>
       <div class="fld"><span>Paid by</span><div class="seg">${METHODS.map(x=>`<label><input type="radio" name="method" value="${x}" ${(f.method||'UPI')===x?'checked':''}>${x}</label>`).join('')}</div></div>
       ${fld('due','Fee for this month (₹)',f.due,'number','min="0" step="1" inputmode="numeric"')}
       ${fld('note','Note <em>(optional)</em>',f.note||'')}`,
-    left: S.fees[m]&&S.fees[m].amount ? `<button type="button" class="btn danger" data-act="unpay" data-id="${m}">Mark not paid</button>` : '',
-    onSave: v => { S.fees[m]={amount:Number(v.amount||0), date:v.date, method:v.method||'UPI', due:Number(v.due||0), note:v.note};
-      save(); push('saveFee', {month:m, fee:S.fees[m]}); toast('Fee saved'); render(); }});
+    left: S.fees[k]&&S.fees[k].amount ? `<button type="button" class="btn danger" data-act="unpay" data-id="${k}">Mark not paid</button>` : '',
+    onSave: v => { S.fees[k]={id:k, studentId:st.id, month:m, amount:Number(v.amount||0), date:v.date, method:v.method||'UPI', due:Number(v.due||0), note:v.note};
+      save(); push('putFee', {fee:S.fees[k]}); toast('Fee saved'); render(); }});
 }
-function studentForm(first){
-  const s = S.student || {name:'', phone:'', joinDate:today(), fee:1000, day:0, time:'10:00', notes:''};
-  const body = `${fld('name','Student name',s.name)}
-    ${fld('phone','Phone <em>(optional)</em>',s.phone,'tel')}
-    <div class="row">${fld('joinDate','Joined on',s.joinDate,'date')}${fld('fee','Monthly fee (₹)',s.fee,'number','min="0" step="1" inputmode="numeric"')}</div>
-    <div class="row"><label class="fld"><span>Usual class day</span><select name="day">${DAYS.map((d,i)=>`<option value="${i}" ${Number(s.day)===i?'selected':''}>${d}</option>`).join('')}</select></label>${fld('time','Usual time',s.time,'time')}</div>
-    ${area('notes','Notes <em>(optional)</em>',s.notes,3)}`;
-  const onSave = v => { if(!v.name.trim()){ toast('Enter the student’s name'); return false; }
-    S.student={...v, name:v.name.trim(), fee:Number(v.fee||0), day:Number(v.day)}; save(); push('saveStudent', {student:S.student}); toast('Saved'); render(); };
-  if (first) return {body, onSave};
-  openModal({title:'Edit student', body, onSave});
+function leftForm(st){
+  openModal({ title:esc(st.name)+' has left', ok:'Save',
+    body: `${fld('leftDate','Last class or leaving date',today(),'date')}
+      <p class="hint">Fees stop after this month. Their classes and fees stay in your records, under past students.</p>`,
+    onSave: v => { if(!v.leftDate){ toast('Choose a date'); return false; } putStudent({...st, leftDate:v.leftDate, next:null}); toast('Moved to past students'); render(); }});
 }
 
-/* ---------- connect screen ---------- */
+/* ---------- small pieces ---------- */
+const syncBtn = () => `<button class="syncbtn" id="sync" data-act="sync" data-s="${sync.state}"><span class="dot"></span><span>${esc(syncText())}</span></button>`;
+const tabsHTML = (items, cur, act) => `<div class="tabs" role="tablist">${items.map(([k,l])=>`<button role="tab" aria-selected="${cur===k}" data-act="${act}" data-id="${k}">${l}</button>`).join('')}</div>`;
+
+/* ---------- connect + loading ---------- */
 function viewConnect(){
   return `<div class="wrap"><section class="hero"><div class="app"><span>Welcome</span></div><h1>My Music Studio</h1>
     <p class="sub">Connect to your Google Sheet so your records are the same on every device.</p></section>
@@ -369,18 +435,17 @@ async function connect(e){
   if (!key){ err.textContent='Enter the passcode you set in Apps Script.'; return; }
   btn.disabled = true; btn.textContent = 'Connecting…'; err.textContent = '';
   try {
-    const j = await api('get', {}, {url, key});
+    const j = await api('load', {}, {url, key});
     cfg = {url, key}; writeJSON(CFG_KEY, cfg);
     const d = normal(j.data);
-    if (!d.student && S.student){
-      // Empty sheet, but this browser already has records: copy them up.
-      outbox = [JSON.parse(JSON.stringify({action:'replaceAll', data:S}))]; writeJSON(OUT_KEY, outbox);
+    if (!Object.keys(d.students).length && stuList().length){
+      outbox = [clone({action:'replaceAll2', data:S})]; writeJSON(OUT_KEY, outbox);
       await flush(); toast('Your records were copied to the Google Sheet');
     } else { S = d; save(); toast('Connected'); }
     remote = {checked:true, err:''}; render();
   } catch(ex){
     err.textContent = !ex.server ? 'Couldn’t reach that web app. Check the URL, and that it’s deployed with access for “Anyone”.'
-      : ex.message==='Wrong passcode' ? 'That passcode doesn’t match the one in Apps Script.' : ex.message;
+      : ex.message==='Wrong passcode' ? 'That passcode doesn’t match the one in Apps Script.' : ex.message+'.';
     btn.disabled = false; btn.textContent = 'Connect';
   }
 }
@@ -388,26 +453,79 @@ function viewLoading(){
   return `<div class="wrap"><section class="hero"><div class="app"><span>My Music Studio</span></div><h1>My Music Studio</h1>
     <p class="sub">${remote.err ? '' : 'Loading your records from Google Sheet…'}</p></section>
     ${remote.err ? `<div class="panel"><p class="err" style="margin-bottom:12px">${esc(remote.err)}</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" data-act="retry">Try again</button><button class="btn" data-act="disconnect">Change connection</button></div></div>` : ''}</div>`;
+      <div class="btns"><button class="btn primary" data-act="retry">Try again</button><button class="btn" data-act="disconnect">Change connection</button></div></div>` : ''}</div>`;
 }
 
-/* ---------- views ---------- */
-function viewSetup(){
-  const f = studentForm(true);
-  setTimeout(()=>{ $('#sf').onsubmit = e => { e.preventDefault(); f.onSave(Object.fromEntries(new FormData(e.target))); }; },0);
-  return `<div class="wrap"><section class="hero"><div class="app"><span>Welcome</span></div><h1>My Music Studio</h1><p class="sub">Keep track of each class and each month’s fee. Start with your student.</p></section>
-    <form id="sf" class="panel" novalidate style="display:flex;flex-direction:column;gap:12px">${f.body}<div><button class="btn primary" type="submit">Get started</button></div></form>
-    <p class="hint" style="margin-top:10px">Everything is saved to your Google Sheet.</p></div>`;
+/* ---------- home ---------- */
+function stuRow(s){
+  const cm = thisMonth(), n = nextClass(s), f = inMonth(s,cm) ? feeInfo(s,cm) : null;
+  const info = s.leftDate ? 'Left on '+fmtDate(s.leftDate) : n ? 'Next class '+dayLabel(n.date)+(n.time?', '+fmtTime(n.time):'') : 'No class day set';
+  return `<a class="stu" href="#student-${s.id}"><span class="nm">${esc(s.name)}${s.instrument?`<small>${esc(s.instrument)}</small>`:''}</span>
+    <span class="info">${info}</span>${f?`<span class="pill ${tone(f.status)}">${f.status}</span>`:''}</a>`;
 }
-function viewClasses(){
-  const all = classes();
-  const words = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  const items = all.filter(c => { const h=(c.did+' '+c.homework+' '+c.notes).toLowerCase(); return words.every(w=>h.includes(w)); });
-  return `<div class="bar"><input type="search" id="q" placeholder="Search classes" value="${esc(q)}" aria-label="Search classes"><button class="btn primary" data-act="addClass">+ Add class</button></div>
-    <div id="list">${listHTML(items, all.length)}</div>`;
+function rosterHTML(){
+  const all = stuList(), act = all.filter(s=>!s.leftDate), past = all.filter(s=>s.leftDate);
+  if (!all.length) return `<div class="empty">No students yet. Add each student you teach, then record their classes and fees.<br><button class="btn primary sm" data-act="addStudent">Add your first student</button></div>`;
+  const w = rq.trim().toLowerCase();
+  const match = s => !w || (s.name+' '+(s.instrument||'')).toLowerCase().includes(w);
+  const a = act.filter(match), p = past.filter(match);
+  let h = a.length ? `<div class="list">${a.map(stuRow).join('')}</div>` : `<div class="empty">${w?'No current students match that search.':'No current students.'}</div>`;
+  if (past.length){
+    if (showPast || w) h += p.length ? `<h3 class="more" style="margin-bottom:8px;font-size:1rem">Past students</h3><div class="list">${p.map(stuRow).join('')}</div>` : '';
+    if (!w) h += `<div class="more"><button class="btn ghost sm" data-act="togglePast">${showPast?'Hide past students':'Show past students ('+past.length+')'}</button></div>`;
+  }
+  return h;
 }
-function listHTML(items, total){
-  if (!total) return `<div class="empty">No classes yet. After each class, write down what you did.<br><button class="btn primary sm" data-act="addClass">Add your first class</button></div>`;
+function homeFeesHTML(){
+  const m = feeMonth || thisMonth(), list = stuList().filter(s=>inMonth(s,m));
+  const rows = list.map(s=>({s, f:feeInfo(s,m)}));
+  const collected = rows.reduce((t,r)=>t+r.f.paid,0), pend = rows.reduce((t,r)=>t+r.f.bal,0);
+  const allPend = stuList().reduce((t,s)=>t+pendingOf(s),0);
+  return `<div class="monthnav"><button class="btn sm" data-act="month" data-id="${prevMonth(m)}" aria-label="Previous month">‹</button><h3>${fmtMonth(m)}</h3>
+      <button class="btn sm" data-act="month" data-id="${nextMonth(m)}" aria-label="Next month" ${m>=thisMonth()?'disabled':''}>›</button></div>
+    <div class="total"><span>Collected <strong>${inr(collected)}</strong></span><span>Pending this month <strong style="color:${pend?'var(--red)':'inherit'}">${inr(pend)}</strong></span><span>Pending, all months <strong>${inr(allPend)}</strong></span></div>
+    ${rows.length ? `<div class="list">${rows.map(({s,f})=>`<div class="fee">
+      <a class="m" href="#student-${s.id}">${esc(s.name)}</a>
+      <span class="pill ${tone(f.status)}">${f.status}</span>
+      <span class="info">${f.paid ? `${inr(f.paid)}${f.bal?' of '+inr(f.due):''} on ${fmtDate(f.date)}, ${esc(f.method)}` : inr(f.due)+' due'}</span>
+      <button class="btn sm ${f.paid?'ghost':''}" data-act="fee" data-id="${s.id}" data-m="${m}">${f.paid?'Edit':'Mark as paid'}</button></div>`).join('')}</div>`
+      : `<div class="empty">No students had classes in ${fmtMonth(m)}.</div>`}`;
+}
+function settingsHTML(){
+  return `<div class="panel"><h3 style="margin-bottom:6px">Google Sheet</h3>
+      <p class="muted small" id="syncPanel" style="margin-bottom:10px">${syncPanelInner()}</p>
+      <div class="btns"><button class="btn" data-act="syncNow">Sync now</button><button class="btn ghost danger" data-act="disconnect">Disconnect this device</button></div></div>
+    <div class="panel"><h3 style="margin-bottom:6px">Backup</h3>
+      <p class="muted small" style="margin-bottom:10px">Your records are in your Google Sheet. You can also keep a backup file of your own.</p>
+      <div class="btns"><button class="btn" data-act="export">Download backup</button>
+      <label class="btn" style="cursor:pointer">Restore from backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div></div>`;
+}
+function viewHome(){
+  const act = stuList().filter(s=>!s.leftDate), cm = thisMonth(), wk = addDays(today(),6);
+  const up = act.map(s=>({s, n:nextClass(s)})).filter(x=>x.n && x.n.date<=wk)
+    .sort((a,b)=>(a.n.date+(a.n.time||'')).localeCompare(b.n.date+(b.n.time||'')));
+  const fm = act.filter(s=>inMonth(s,cm)).map(s=>feeInfo(s,cm));
+  const got = fm.reduce((t,f)=>t+f.paid,0), due = fm.reduce((t,f)=>t+f.due,0), nPaid = fm.filter(f=>f.status==='Paid').length;
+  return `<div class="wrap">
+    <section class="hero"><div class="app"><span>${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'})}</span>${syncBtn()}</div>
+      <h1>My Music Studio</h1><p class="sub">${act.length} student${act.length===1?'':'s'}</p></section>
+    ${act.length ? `<div class="cards two">
+      <div class="card"><span class="lbl">Coming up this week</span>
+        ${up.length ? up.slice(0,6).map(({s,n})=>`<a class="upl" href="#student-${s.id}"><span class="d">${dayLabel(n.date)}</span><span class="t">${fmtTime(n.time)}</span><span class="n">${esc(s.name)}</span></a>`).join('')
+          + (up.length>6?`<span class="muted small">and ${up.length-6} more</span>`:'') : '<span class="muted">No classes in the next 7 days.</span>'}</div>
+      <div class="card"><span class="lbl">${fmtMonth(cm)} fees</span>
+        <span class="big">${inr(got)} <span class="muted" style="font-family:var(--body);font-weight:400;font-size:1rem">of ${inr(due)}</span></span>
+        <span class="muted">${nPaid} of ${fm.length} student${fm.length===1?'':'s'} paid</span>
+        <div class="act"><button class="btn sm" data-act="home" data-id="fees">See fees</button></div></div>
+    </div>` : ''}
+    ${tabsHTML([['students','Students'],['fees','Fees'],['settings','Settings']], homeTab, 'home')}
+    <div id="view">${homeTab==='students' ? `<div class="bar"><input type="search" id="rq" placeholder="Search students" value="${esc(rq)}" aria-label="Search students"><button class="btn primary" data-act="addStudent">+ Add student</button></div><div id="roster">${rosterHTML()}</div>`
+      : homeTab==='fees' ? homeFeesHTML() : settingsHTML()}</div></div>`;
+}
+
+/* ---------- one student ---------- */
+function listHTML(items, total, st){
+  if (!total) return `<div class="empty">No classes yet. After each class, write down what you did.<br><button class="btn primary sm" data-act="addClass" data-id="${st.id}">Add the first class</button></div>`;
   if (!items.length) return `<div class="empty">No classes match that search.</div>`;
   return items.map(c=>`<article class="entry">
     <div class="top"><span class="when">${fmtDay(c.date)} <span class="t">${parseD(c.date).getFullYear()}${c.time?', '+fmtTime(c.time):''}</span></span></div>
@@ -417,79 +535,99 @@ function listHTML(items, total){
     <div class="tools"><button class="btn ghost sm" data-act="editClass" data-id="${c.id}">Edit</button></div>
   </article>`).join('');
 }
-function viewFees(){
-  const ms = months().map(feeInfo);
-  const collected = Object.values(S.fees).reduce((s,f)=>s+Number(f.amount||0),0);
-  const pending = ms.reduce((s,m)=>s+m.bal,0);
+const classFilter = list => { const w=cq.trim().toLowerCase().split(/\s+/).filter(Boolean); return list.filter(c=>w.every(x=>(c.did+' '+c.homework+' '+c.notes).toLowerCase().includes(x))); };
+function stuFeesHTML(st){
+  const ms = monthsOf(st).map(m=>feeInfo(st,m));
+  const collected = ms.reduce((s,m)=>s+m.paid,0), pending = ms.reduce((s,m)=>s+m.bal,0);
   return `<div class="total"><span>Collected <strong>${inr(collected)}</strong></span><span>Pending <strong style="color:${pending?'var(--red)':'inherit'}">${inr(pending)}</strong></span></div>
-    <div class="fees">${ms.map(m=>`<div class="fee">
+    <div class="list">${ms.map(m=>`<div class="fee">
       <span class="m">${fmtMonth(m.month)}</span>
       <span class="pill ${tone(m.status)}">${m.status}</span>
       <span class="info">${m.paid ? `${inr(m.paid)}${m.bal?' of '+inr(m.due):''} on ${fmtDate(m.date)}, ${esc(m.method)}${m.note?'. '+esc(m.note):''}` : inr(m.due)+' due'}</span>
-      <button class="btn sm ${m.paid?'ghost':''}" data-act="fee" data-id="${m.month}">${m.paid?'Edit':'Mark as paid'}</button>
+      <button class="btn sm ${m.paid?'ghost':''}" data-act="fee" data-id="${st.id}" data-m="${m.month}">${m.paid?'Edit':'Mark as paid'}</button>
     </div>`).join('')}</div>`;
 }
-function viewStudent(){
-  const s = S.student;
+function stuDetailsHTML(st){
   return `<div class="panel"><dl>
-      <dt>Name</dt><dd>${esc(s.name)}</dd>
-      <dt>Phone</dt><dd>${esc(s.phone||'—')}</dd>
-      <dt>Joined on</dt><dd>${fmtDate(s.joinDate)}</dd>
-      <dt>Monthly fee</dt><dd>${inr(s.fee)}</dd>
-      <dt>Usual class</dt><dd>${esc(DAYS[s.day])}${s.time?', '+fmtTime(s.time):''}</dd>
-      <dt>Classes so far</dt><dd>${Object.keys(S.classes).length}</dd>
-      ${s.notes?`<dt>Notes</dt><dd style="font-weight:400">${esc(s.notes)}</dd>`:''}
-    </dl><div style="margin-top:14px"><button class="btn" data-act="editStudent">Edit details</button></div></div>
-    <div class="panel" style="margin-top:12px"><h3 style="margin-bottom:6px">Google Sheet</h3>
-      <p class="muted small" id="syncPanel" style="margin-bottom:10px">${syncPanelInner()}</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-act="syncNow">Sync now</button>
-      <button class="btn ghost danger" data-act="disconnect">Disconnect this device</button></div></div>
-    <div class="panel" style="margin-top:12px"><h3 style="margin-bottom:6px">Backup</h3>
-      <p class="muted small" style="margin-bottom:10px">Your records are in your Google Sheet. You can also keep a backup file of your own.</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-act="export">Download backup</button>
-      <label class="btn" style="cursor:pointer">Restore from backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div></div>`;
+      <dt>Name</dt><dd>${esc(st.name)}</dd>
+      <dt>Instrument</dt><dd>${esc(st.instrument||'—')}</dd>
+      <dt>Phone</dt><dd>${st.phone?`<a href="tel:${esc(st.phone)}" style="color:inherit">${esc(st.phone)}</a>`:'—'}</dd>
+      <dt>Joined on</dt><dd>${fmtDate(st.joinDate)}</dd>
+      ${st.leftDate?`<dt>Left on</dt><dd>${fmtDate(st.leftDate)}</dd>`:''}
+      <dt>Monthly fee</dt><dd>${inr(st.fee)}</dd>
+      <dt>Usual class</dt><dd>${esc(DAYS[st.day]||'—')}${st.time?', '+fmtTime(st.time):''}</dd>
+      <dt>Classes so far</dt><dd>${classesOf(st.id).length}</dd>
+      ${st.notes?`<dt>Notes</dt><dd style="font-weight:400">${esc(st.notes)}</dd>`:''}
+    </dl><div class="btns" style="margin-top:14px"><button class="btn" data-act="editStudent" data-id="${st.id}">Edit details</button>
+      ${st.leftDate ? `<button class="btn" data-act="rejoin" data-id="${st.id}">Rejoined</button>` : `<button class="btn" data-act="left" data-id="${st.id}">Student has left</button>`}
+      <span class="grow"></span><button class="btn ghost danger" data-act="delStudent" data-id="${st.id}">Delete student</button></div></div>`;
 }
+function viewStudent(st){
+  const nc=nextClass(st), all=classesOf(st.id), last=all[0], cm=thisMonth(), showFee=inMonth(st,cm), f=feeInfo(st,cm);
+  const due = nc && nc.date<=today();
+  return `<div class="wrap">
+    <section class="hero"><div class="app"><a href="#" class="back">‹ All students</a>${syncBtn()}</div>
+      <h1>${esc(st.name)}</h1><p class="sub">${esc(st.instrument||'Music')}. ${st.leftDate ? 'Left on '+fmtDate(st.leftDate)+'.' : 'Usually '+usual(st)+'.'}</p></section>
+    <div class="cards">
+      <div class="card"><span class="lbl">Next class</span>
+        <span class="big">${st.leftDate?'—':nc?dayLabel(nc.date):'Not set'}</span><span class="muted">${nc&&nc.time?fmtTime(nc.time):''}${nc&&nc.custom?' (changed)':''}</span>
+        ${st.leftDate?'':`<div class="act"><button class="btn sm" data-act="next" data-id="${st.id}">Change</button>${due?`<button class="btn sm primary" data-act="addClass" data-id="${st.id}">Add class</button>`:''}</div>`}</div>
+      <div class="card"><span class="lbl">${showFee?fmtMonth(cm)+' fee':'Fees'}</span>
+        ${showFee ? `<span class="big"><span class="pill ${tone(f.status)}" style="font-size:.95rem">${f.status}</span></span>
+          <span class="muted">${f.paid?inr(f.paid)+' on '+fmtDate(f.date):inr(f.due)+' due'}</span>
+          <div class="act"><button class="btn sm ${f.status==='Paid'?'':'primary'}" data-act="fee" data-id="${st.id}" data-m="${cm}">${f.paid?'Edit':'Mark as paid'}</button></div>`
+          : `<span class="big">${inr(pendingOf(st))}</span><span class="muted">pending</span>`}</div>
+      <div class="card"><span class="lbl">Last class</span>
+        <span class="big">${last?fmtDay(last.date):'None yet'}</span>${last?`<span class="clip">${esc(last.did)}</span>`:''}
+        <div class="act"><button class="btn sm ${due?'':'primary'}" data-act="addClass" data-id="${st.id}">+ Add class</button></div></div>
+    </div>
+    ${tabsHTML([['classes','Classes'],['fees','Fees'],['details','Details']], stuTab, 'stab')}
+    <div id="view">${stuTab==='classes' ? `<div class="bar"><input type="search" id="cq" placeholder="Search ${esc(st.name)}’s classes" value="${esc(cq)}" aria-label="Search classes"><button class="btn primary" data-act="addClass" data-id="${st.id}">+ Add class</button></div>
+      <div id="list">${listHTML(classFilter(all), all.length, st)}</div>`
+      : stuTab==='fees' ? stuFeesHTML(st) : stuDetailsHTML(st)}</div></div>`;
+}
+
+/* ---------- render ---------- */
 function render(){
   load.done || (load(), load.done=true);
   const app=$('#app');
   if (!cfg){ app.innerHTML=viewConnect(); $('#cf').onsubmit=connect; return; }
-  if (!S.student && !remote.checked){ app.innerHTML=viewLoading(); return; }
-  if (!S.student){ app.innerHTML=viewSetup(); return; }
-  const nc=nextClass(), last=classes()[0], cm=today().slice(0,7), f=feeInfo(cm);
-  app.innerHTML = `<div class="wrap">
-    <section class="hero"><div class="app"><span>${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'})}</span>
-      <button class="syncbtn" id="sync" data-act="sync" data-s="${sync.state}"><span class="dot"></span><span>${esc(syncText())}</span></button></div>
-      <h1>${esc(S.student.name)}</h1><p class="sub">Keyboard/Piano. Usually ${esc(DAYS[S.student.day])}s${S.student.time?' at '+fmtTime(S.student.time):''}.</p></section>
-    <div class="cards">
-      <div class="card"><span class="lbl">Next class</span>
-        <span class="big">${nc?fmtDay(nc.date):'Not set'}</span><span class="muted">${nc&&nc.time?fmtTime(nc.time):''}${nc&&nc.custom?' (changed)':''}</span>
-        <div class="act"><button class="btn sm" data-act="next">Change</button>${nc&&nc.date<=today()?'<button class="btn sm primary" data-act="addClass">Add class</button>':''}</div></div>
-      <div class="card"><span class="lbl">${fmtMonth(cm)} fee</span>
-        <span class="big"><span class="pill ${tone(f.status)}" style="font-size:.95rem">${f.status}</span></span>
-        <span class="muted">${f.paid?inr(f.paid)+' on '+fmtDate(f.date):inr(f.due)+' due'}</span>
-        <div class="act"><button class="btn sm ${f.status==='Paid'?'':'primary'}" data-act="fee" data-id="${cm}">${f.paid?'Edit':'Mark as paid'}</button></div></div>
-      <div class="card"><span class="lbl">Last class</span>
-        <span class="big">${last?fmtDay(last.date):'None yet'}</span>${last?`<span class="clip">${esc(last.did)}</span>`:''}
-        <div class="act"><button class="btn sm ${nc&&nc.date<=today()?'':'primary'}" data-act="addClass">+ Add class</button></div></div>
-    </div>
-    <div class="tabs" role="tablist">${[['classes','Classes'],['fees','Fees'],['student','Student']].map(([k,l])=>`<button role="tab" aria-selected="${tab===k}" data-act="tab" data-id="${k}">${l}</button>`).join('')}</div>
-    <div id="view">${tab==='classes'?viewClasses():tab==='fees'?viewFees():viewStudent()}</div></div>`;
-  const qi=$('#q'); if (qi) qi.oninput = e => { q=e.target.value; const all=classes(); const w=q.trim().toLowerCase().split(/\s+/).filter(Boolean); $('#list').innerHTML=listHTML(all.filter(c=>w.every(x=>(c.did+' '+c.homework+' '+c.notes).toLowerCase().includes(x))), all.length); };
+  if (!stuList().length && !remote.checked){ app.innerHTML=viewLoading(); return; }
+  const st = route();
+  if (!st && location.hash.startsWith('#student-')) history.replaceState(null,'',location.pathname+location.search);
+  app.innerHTML = st ? viewStudent(st) : viewHome();
+  const r=$('#rq'); if (r) r.oninput = e => { rq=e.target.value; $('#roster').innerHTML=rosterHTML(); };
+  const c=$('#cq'); if (c) c.oninput = e => { cq=e.target.value; const all=classesOf(st.id); $('#list').innerHTML=listHTML(classFilter(all), all.length, st); };
   const imp=$('#imp'); if (imp) imp.onchange = restore;
 }
 
 /* ---------- actions ---------- */
+const stu = d => S.students[d.id];
 const A = {
   close,
-  tab: d => { tab=d.id; render(); },
-  addClass: () => classForm(null),
-  editClass: d => classForm(S.classes[d.id]),
-  delClass: d => { close(); confirmBox('Delete this class record?', 'Delete', ()=>{ delete S.classes[d.id]; save(); push('deleteClass', {id:d.id}); toast('Class deleted'); render(); }); },
-  next: () => nextForm(),
-  resetNext: () => { S.next=null; save(); push('saveNext', {next:null}); close(); toast('Back to the usual day'); render(); },
-  fee: d => feeForm(d.id),
-  unpay: d => { close(); confirmBox('Mark '+fmtMonth(d.id)+' as not paid?', 'Mark not paid', ()=>{ delete S.fees[d.id]; save(); push('deleteFee', {month:d.id}); render(); }); },
-  editStudent: () => studentForm(false),
+  home: d => { homeTab=d.id; render(); },
+  stab: d => { stuTab=d.id; render(); },
+  month: d => { feeMonth=d.id; render(); },
+  togglePast: () => { showPast=!showPast; $('#roster').innerHTML=rosterHTML(); },
+  addStudent: () => studentForm(null),
+  editStudent: d => studentForm(stu(d)),
+  left: d => leftForm(stu(d)),
+  rejoin: d => { putStudent({...stu(d), leftDate:''}); toast('Back in current students'); render(); },
+  delStudent: d => {
+    const st=stu(d), nc=classesOf(st.id).length;
+    confirmBox(`Delete <b>${esc(st.name)}</b>${nc?` and their ${nc} class record${nc===1?'':'s'}`:''} and fee records? This can’t be undone. If they’ve just stopped coming, use “Student has left” instead.`, 'Delete student', ()=>{
+      Object.values(S.classes).forEach(c=>{ if(c.studentId===st.id) delete S.classes[c.id]; });
+      Object.values(S.fees).forEach(f=>{ if(f.studentId===st.id) delete S.fees[f.id]; });
+      delete S.students[st.id]; save(); push('delStudent', {id:st.id}); toast(st.name+' deleted'); location.hash='';
+    });
+  },
+  addClass: d => classForm(stu(d), null),
+  editClass: d => { const c=S.classes[d.id]; classForm(S.students[c.studentId], c); },
+  delClass: d => { close(); confirmBox('Delete this class record?', 'Delete', ()=>{ delete S.classes[d.id]; save(); push('delClass', {id:d.id}); toast('Class deleted'); render(); }); },
+  next: d => nextForm(stu(d)),
+  resetNext: d => { putStudent({...stu(d), next:null}); close(); toast('Back to the usual day'); render(); },
+  fee: d => feeForm(stu(d), d.m),
+  unpay: d => { const f=S.fees[d.id]; close(); confirmBox('Mark '+fmtMonth(f.month)+' as not paid?', 'Mark not paid', ()=>{ delete S.fees[d.id]; save(); push('delFee', {id:d.id}); render(); }); },
   sync: () => {
     if (sync.state==='error'){
       openModal({title:'Not saving to the sheet', body:`<p>${esc(sync.msg)}.</p><p class="hint" style="margin-top:8px">Your changes are kept on this device and will be sent once this is fixed.</p>`,
@@ -502,11 +640,11 @@ const A = {
     const n = outbox.length;
     confirmBox('Disconnect this device? Your records stay in the Google Sheet.'+(n?` <b>${n} change${n===1?'':'s'} not yet saved to the sheet will be lost.</b>`:''), 'Disconnect', ()=>{
       cfg=null; writeJSON(CFG_KEY, null); outbox=[]; writeJSON(OUT_KEY, outbox);
-      S=EMPTY(); save(); remote={checked:false, err:''}; setSync('ok'); render();
+      S=EMPTY(); save(); remote={checked:false, err:''}; setSync('ok'); location.hash=''; render();
     });
   },
   export: () => {
-    const blob=new Blob([JSON.stringify({app:'my-music-studio-simple',...S},null,2)],{type:'application/json'});
+    const blob=new Blob([JSON.stringify({app:'my-music-studio', version:2, ...S},null,2)],{type:'application/json'});
     const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='music-studio-backup-'+today()+'.json'; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(()=>URL.revokeObjectURL(a.href),1000); toast('Backup downloaded');
   }
@@ -515,13 +653,15 @@ function restore(e){
   const file=e.target.files[0]; if(!file) return;
   const r=new FileReader();
   r.onload=()=>{ let d; try{ d=JSON.parse(r.result); }catch(err){ toast('That file isn’t a backup'); return; }
-    if(!d || d.app!=='my-music-studio-simple'){ toast('That file isn’t a My Music Studio backup'); return; }
-    confirmBox('Replace everything in the Google Sheet with this backup?', 'Restore', ()=>{ S=normal(d); save(); push('replaceAll', {data:S}); toast('Backup restored'); render(); }); };
+    let data = null;
+    if (d && d.app==='my-music-studio') data = normal(d);
+    else if (d && d.app==='my-music-studio-simple' && d.student) data = fromV1(d);
+    if (!data){ toast('That file isn’t a My Music Studio backup'); return; }
+    confirmBox('Replace everything in the Google Sheet with this backup?', 'Restore', ()=>{ S=data; save(); push('replaceAll2', {data:S}); toast('Backup restored'); location.hash=''; render(); }); };
   r.readAsText(file); e.target.value='';
 }
 document.addEventListener('click', e => { const el=e.target.closest('[data-act]'); if(!el||!A[el.dataset.act]) return; e.preventDefault(); A[el.dataset.act](el.dataset); });
 
-/* Pick up changes made on other devices */
 document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
 window.addEventListener('online', refresh);
 setInterval(() => { if (!document.hidden) refresh(); }, 60000);
