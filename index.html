@@ -99,15 +99,40 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .stu .info{flex:1;color:var(--muted);font-size:.92rem;min-width:150px}
 .more{margin-top:14px}
 
-.entry{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
-.entry+.entry{margin-top:10px}
-.entry .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+/* class entries: collapsed by default, tap the row to open */
+.lhead{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.entry{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.entry+.entry{margin-top:8px}
+.entry>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px}
+.entry>summary::-webkit-details-marker{display:none}
+.entry>summary:hover{background:var(--surface-2)}
+.entry[open]>summary{border-radius:12px 12px 0 0}
+.entry .tri{flex:none;width:0;height:0;border-left:8px solid var(--muted);border-top:5px solid transparent;border-bottom:5px solid transparent;transition:transform .15s}
+.entry[open] .tri{transform:rotate(90deg);border-left-color:var(--accent)}
+.entry .head{display:flex;flex-direction:column;min-width:0;flex:1}
 .entry .when{font-family:var(--display);font-weight:700;font-size:1.08rem}
 .entry .t{color:var(--muted);font-size:.9rem;font-weight:400;font-family:var(--body)}
-.entry .txt{white-space:pre-wrap}
+.entry .peek{color:var(--muted);font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.entry[open] .peek{display:none}
+.entry .flags{display:flex;gap:4px;flex:none}
+.entry .body{padding:4px 16px 12px 40px;border-top:1px solid var(--line)}
+@media (max-width:460px){.entry .body{padding-left:16px}}
+.entry .txt{white-space:pre-wrap;margin-top:8px}
 .entry .sub{margin-top:8px;font-size:.93rem;white-space:pre-wrap}
 .entry .sub b{color:var(--muted)}
 .entry .tools{display:flex;gap:4px;margin-top:8px;margin-left:-8px}
+.files{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.files:empty{display:none}
+.file{display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;color:inherit;text-decoration:none;min-width:0;background:var(--surface)}
+a.file:hover{background:var(--surface-2);border-color:var(--muted)}
+.file .k{flex:none;font-size:.75rem;font-weight:700;padding:2px 7px;border-radius:5px;background:var(--surface-2);color:var(--muted)}
+.file .fn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;font-size:.92rem}
+.file .sz{flex:none;color:var(--muted);font-size:.85rem}
+.file .x{font-size:1.25rem;padding:0 6px}
+.file.busy{border-style:dashed;color:var(--muted)}
+.linkrow{display:flex;gap:8px;flex-wrap:wrap}
+.linkrow[hidden]{display:none}
+.linkrow input{flex:1 1 180px;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px}
 
 .fee{display:flex;align-items:center;gap:12px;padding:13px 16px;border-top:1px solid var(--line);flex-wrap:wrap}
 .fee:first-child{border-top:0}
@@ -167,11 +192,15 @@ const KEY = 'my-music-studio-v2';               // local copy
 const OLD_KEY = 'my-music-studio-simple-v1';    // one-student version, moved over on first load
 const CFG_KEY = 'my-music-studio-sync-v1';      // web app URL + passcode for this device
 const OUT_KEY = 'my-music-studio-outbox-v2';    // changes not yet saved to the sheet
+const SORT_KEY = 'my-music-studio-class-sort';  // newest or oldest first, per device
+const SV_KEY = 'my-music-studio-server-v';      // Apps Script version last seen
+const MAX_FILE = 10 * 1024 * 1024;
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const METHODS = ['UPI','Cash','Bank Transfer'];
 const EMPTY = () => ({ students:{}, classes:{}, fees:{} });
 let S = EMPTY();
 let homeTab = 'students', stuTab = 'classes', rq = '', cq = '', showPast = false, feeMonth = null;
+const openC = new Set();                        // class entries the person has opened
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
@@ -196,6 +225,20 @@ const writeJSON = (k,v) => { try { v==null ? localStorage.removeItem(k) : localS
 const normal = d => ({ students:d?.students||{}, classes:d?.classes||{}, fees:d?.fees||{} });
 const clone = o => JSON.parse(JSON.stringify(o));
 function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>t.classList.remove('show'),2400); }
+let classSort = readJSON(SORT_KEY)==='old' ? 'old' : 'new';
+let serverV = Number(readJSON(SV_KEY)||0);
+const setServerV = v => { serverV = Number(v||0); writeJSON(SV_KEY, serverV); };
+const readB64 = file => new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(',')[1]||''); r.onerror=()=>rej(new Error('read')); r.readAsDataURL(file); });
+const safeUrl = u => /^https?:\/\//i.test(u||'') ? u : '#';
+const kindOf = f => f.kind==='link' ? (/youtu\.?be/i.test(f.url)?'YouTube':'Link')
+  : /pdf/i.test(f.mime)?'PDF' : /^image/i.test(f.mime)?'Photo' : /^audio/i.test(f.mime)?'Audio' : /^video/i.test(f.mime)?'Video' : 'File';
+const fsize = n => !n ? '' : n<1048576 ? Math.max(1,Math.round(n/1024))+' KB' : (n/1048576).toFixed(1)+' MB';
+function linkName(u){ if (/youtu\.?be/i.test(u)) return 'YouTube video'; try { return new URL(u).hostname.replace(/^www\./,''); } catch(e){ return 'Link'; } }
+function fileRow(f, edit){
+  const inner = `<span class="k">${kindOf(f)}</span><span class="fn">${esc(f.name)}</span>${f.size?`<span class="sz">${fsize(f.size)}</span>`:''}`;
+  return edit ? `<div class="file">${inner}<button type="button" class="x" data-rm="${esc(f.id)}" aria-label="Remove ${esc(f.name)}">×</button></div>`
+    : `<a class="file" href="${esc(safeUrl(f.url))}" target="_blank" rel="noopener">${inner}</a>`;
+}
 
 /* ---------- local copy ---------- */
 function fromV1(o){
@@ -256,7 +299,7 @@ async function refresh(){
     if (!(await flush())){ firstLoadFailed(); return; }
     const s0 = seq; setSync('loading');
     let j;
-    try { j = await api('load'); }
+    try { j = await api('load'); setServerV(j.version); }
     catch(e){ setSync(e.server?'error':'offline', e.server?e.message:''); firstLoadFailed(); return; }
     if (seq !== s0 || outbox.length){ flush(); return; }
     const before = JSON.stringify(S);
@@ -325,22 +368,24 @@ const usual = st => `${esc(DAYS[st.day]||'')}s${st.time?' at '+fmtTime(st.time):
 
 /* ---------- routing: #student-<id> opens a student ---------- */
 function route(){ const m=/^#student-([a-z0-9]+)$/.exec(location.hash); return m && S.students[m[1]] ? S.students[m[1]] : null; }
-window.addEventListener('hashchange', () => { stuTab='classes'; cq=''; close(); render(); window.scrollTo(0,0); });
+window.addEventListener('hashchange', () => { stuTab='classes'; cq=''; openC.clear(); close(); render(); window.scrollTo(0,0); });
 
 /* ---------- modal ---------- */
 const fld = (name,label,val='',type='text',extra='') => `<label class="fld"><span>${label}</span><input name="${name}" type="${type}" value="${esc(val)}" ${extra}></label>`;
 const area = (name,label,val='',rows=3,ph='') => `<label class="fld"><span>${label}</span><textarea name="${name}" rows="${rows}" placeholder="${esc(ph)}">${esc(val)}</textarea></label>`;
-function openModal({title, body, ok='Save', onSave, left=''}){
+let onCancel = null;   // runs when a form is closed without saving
+function openModal({title, body, ok='Save', onSave, left='', cancel=null}){
+  onCancel = cancel;
   $('#modal-root').innerHTML = `<div class="scrim" data-act="close"></div><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt"><form id="mf" novalidate>
     <header><h2 id="mt">${title}</h2><button type="button" class="x" data-act="close" aria-label="Close">×</button></header>
     <div class="mbody">${body}</div>
     <footer>${left}<span class="grow"></span><button type="button" class="btn" data-act="close">${onSave?'Cancel':'Close'}</button>${onSave?`<button class="btn primary" type="submit">${ok}</button>`:''}</footer></form></div>`;
   document.body.classList.add('locked');
   const f=$('#mf');
-  f.onsubmit = e => { e.preventDefault(); if (onSave && onSave(Object.fromEntries(new FormData(f)))!==false) close(); };
+  f.onsubmit = e => { e.preventDefault(); if (onSave && onSave(Object.fromEntries(new FormData(f)))!==false){ onCancel=null; close(); } };
   setTimeout(()=>{ const el=f.querySelector('.mbody input,.mbody textarea'); el&&el.focus(); },40);
 }
-function close(){ $('#modal-root').innerHTML=''; document.body.classList.remove('locked'); }
+function close(){ const c=onCancel; onCancel=null; $('#modal-root').innerHTML=''; document.body.classList.remove('locked'); c&&c(); }
 function confirmBox(msg, yes, fn){
   openModal({title:'Are you sure?', body:`<p>${msg}</p>`, left:`<button type="button" class="btn danger" id="yes">${yes}</button>`});
   $('#yes').onclick = () => { close(); fn(); };
@@ -371,18 +416,62 @@ function studentForm(st){
 function classForm(st, c){
   const nc = nextClass(st);
   const d = c || {id:uid(), studentId:st.id, date:today(), time:(nc && nc.date===today() ? nc.time : st.time) || '', did:'', homework:'', notes:''};
+  const orig = (c && c.files) || [];
+  let files = orig.slice(), fresh = [], uploading = [], gone = false;
+  const canAttach = serverV >= 3;
   openModal({ title: c?'Edit class':'Add a class for '+esc(st.name), ok: c?'Save changes':'Save class',
     body: `<div class="row">${fld('date','Date',d.date,'date')}${fld('time','Time',d.time,'time')}</div>
       ${area('did','What we did',d.did,6,'Revised C, F and G chords. Transitions still slow. Started the new song intro.')}
       ${area('homework','Homework <em>(optional)</em>',d.homework,2,'Practise C–F–G changes, 15 minutes daily')}
-      ${area('notes','Notes for next time <em>(optional)</em>',d.notes,2,'Start with chord changes, then the song')}`,
+      ${area('notes','Notes for next time <em>(optional)</em>',d.notes,2,'Start with chord changes, then the song')}
+      <div class="fld"><span>Files and links <em>(optional)</em></span>
+        ${canAttach ? `<div class="files" id="flist"></div>
+        <div class="btns"><label class="btn sm" style="cursor:pointer">Attach file<input type="file" id="fpick" multiple hidden></label>
+          <button type="button" class="btn sm" id="linkbtn">Add a link</button></div>
+        <div class="linkrow" id="linkrow" hidden><input type="url" id="lurl" placeholder="Paste a YouTube or Drive link" aria-label="Link"><input id="lname" placeholder="Name (optional)" aria-label="Link name"><button type="button" class="btn sm primary" id="ladd">Add</button></div>
+        <p class="hint">Files are saved to the “My Music Studio Files” folder in your Google Drive, up to 10 MB each.</p>`
+        : `<p class="hint">To attach files and links, update your Apps Script with the new Code.gs, run setup once, and deploy a new version.</p>`}
+      </div>`,
     left: c?`<button type="button" class="btn danger" data-act="delClass" data-id="${c.id}">Delete</button>`:'',
+    cancel: () => { gone = true; fresh.forEach(f=>push('delFile',{fileId:f.id})); },
     onSave: v => {
+      if (uploading.length){ toast('Wait for the upload to finish'); return false; }
       if (!v.date){ toast('Choose a date'); return false; }
       if (!v.did.trim()){ toast('Write what you did in this class'); return false; }
-      S.classes[d.id] = {...d, ...v}; save(); push('putClass', {cls:S.classes[d.id]});
+      const keep = new Set(files.map(f=>f.id));
+      orig.concat(fresh).forEach(f=>{ if (f.kind==='drive' && !keep.has(f.id)) push('delFile',{fileId:f.id}); });
+      gone = true;
+      S.classes[d.id] = {...d, ...v, files}; save(); push('putClass', {cls:S.classes[d.id]});
       toast(c?'Class updated':'Class saved'); render();
     }});
+  if (!canAttach) return;
+  const draw = () => { const l=$('#flist'); if (!l || gone) return;
+    l.innerHTML = files.map(f=>fileRow(f,true)).join('') + uploading.map(n=>`<div class="file busy"><span class="k">…</span><span class="fn">Uploading ${esc(n)}</span></div>`).join(''); };
+  draw();
+  $('#flist').onclick = e => { const b=e.target.closest('[data-rm]'); if (!b) return; files = files.filter(f=>f.id!==b.dataset.rm); draw(); };
+  $('#fpick').onchange = e => {
+    [...e.target.files].forEach(async file => {
+      if (file.size > MAX_FILE){ toast(file.name+' is over 10 MB'); return; }
+      uploading.push(file.name); draw();
+      try {
+        const j = await api('upload', {studentId:st.id, name:file.name, mime:file.type||'application/octet-stream', data:await readB64(file)});
+        if (gone){ push('delFile',{fileId:j.file.id}); return; }
+        files.push(j.file); fresh.push(j.file);
+      } catch(ex){ toast(ex.server ? ex.message : 'Couldn’t upload '+file.name+'. Check your internet connection.'); }
+      finally { uploading.splice(uploading.indexOf(file.name),1); draw(); }
+    });
+    e.target.value = '';
+  };
+  const row=$('#linkrow'), lu=$('#lurl'), ln=$('#lname');
+  $('#linkbtn').onclick = () => { row.hidden = false; lu.focus(); };
+  const addLink = () => {
+    const u = lu.value.trim();
+    if (!/^https?:\/\/\S+$/i.test(u)){ toast('Paste a full link starting with https://'); lu.focus(); return; }
+    files.push({id:uid(), kind:'link', name:ln.value.trim()||linkName(u), url:u});
+    lu.value=''; ln.value=''; row.hidden=true; draw();
+  };
+  $('#ladd').onclick = addLink;
+  [lu,ln].forEach(i=>i.onkeydown = e => { if (e.key==='Enter'){ e.preventDefault(); addLink(); } });
 }
 function nextForm(st){
   const nc = nextClass(st) || {date:today(), time:st.time||''};
@@ -436,7 +525,7 @@ async function connect(e){
   btn.disabled = true; btn.textContent = 'Connecting…'; err.textContent = '';
   try {
     const j = await api('load', {}, {url, key});
-    cfg = {url, key}; writeJSON(CFG_KEY, cfg);
+    cfg = {url, key}; writeJSON(CFG_KEY, cfg); setServerV(j.version);
     const d = normal(j.data);
     if (!Object.keys(d.students).length && stuList().length){
       outbox = [clone({action:'replaceAll2', data:S})]; writeJSON(OUT_KEY, outbox);
@@ -524,18 +613,39 @@ function viewHome(){
 }
 
 /* ---------- one student ---------- */
+const peek = c => String(c.did||'').split('\n').map(x=>x.trim()).find(Boolean) || '';
 function listHTML(items, total, st){
   if (!total) return `<div class="empty">No classes yet. After each class, write down what you did.<br><button class="btn primary sm" data-act="addClass" data-id="${st.id}">Add the first class</button></div>`;
   if (!items.length) return `<div class="empty">No classes match that search.</div>`;
-  return items.map(c=>`<article class="entry">
-    <div class="top"><span class="when">${fmtDay(c.date)} <span class="t">${parseD(c.date).getFullYear()}${c.time?', '+fmtTime(c.time):''}</span></span></div>
-    <p class="txt">${esc(c.did)}</p>
-    ${c.homework?`<p class="sub"><b>Homework:</b> ${esc(c.homework)}</p>`:''}
-    ${c.notes?`<p class="sub"><b>Next time:</b> ${esc(c.notes)}</p>`:''}
-    <div class="tools"><button class="btn ghost sm" data-act="editClass" data-id="${c.id}">Edit</button></div>
-  </article>`).join('');
+  const searching = !!cq.trim();
+  const list = classSort==='old' ? items.slice().reverse() : items;
+  const allOpen = list.every(c=>openC.has(c.id));
+  const head = `<div class="lhead"><span class="muted small">${list.length} class${list.length===1?'':'es'}${searching?' found':''}</span><span class="grow"></span>
+    <button class="btn ghost sm" data-act="sortClasses" data-id="${st.id}" title="Change order">${classSort==='old'?'Oldest first':'Newest first'} ⇅</button>
+    ${searching?'':`<button class="btn ghost sm" data-act="expandAll" data-id="${st.id}">${allOpen?'Collapse all':'Expand all'}</button>`}</div>`;
+  return head + list.map(c=>`<details class="entry" data-cid="${c.id}" ${searching||openC.has(c.id)?'open':''}>
+    <summary><span class="tri" aria-hidden="true"></span>
+      <span class="head"><span class="when">${fmtDay(c.date)} <span class="t">${parseD(c.date).getFullYear()}${c.time?', '+fmtTime(c.time):''}</span></span>
+      <span class="peek">${esc(peek(c))}</span></span>
+      ${c.homework||(c.files&&c.files.length)?`<span class="flags">${c.homework?'<span class="pill">Homework</span>':''}${c.files&&c.files.length?`<span class="pill">${c.files.length} file${c.files.length===1?'':'s'}</span>`:''}</span>`:''}</summary>
+    <div class="body">
+      <p class="txt">${esc(c.did)}</p>
+      ${c.homework?`<p class="sub"><b>Homework:</b> ${esc(c.homework)}</p>`:''}
+      ${c.notes?`<p class="sub"><b>Next time:</b> ${esc(c.notes)}</p>`:''}
+      ${c.files&&c.files.length?`<div class="files">${c.files.map(f=>fileRow(f)).join('')}</div>`:''}
+      <div class="tools"><button class="btn ghost sm" data-act="editClass" data-id="${c.id}">Edit</button></div>
+    </div>
+  </details>`).join('');
 }
-const classFilter = list => { const w=cq.trim().toLowerCase().split(/\s+/).filter(Boolean); return list.filter(c=>w.every(x=>(c.did+' '+c.homework+' '+c.notes).toLowerCase().includes(x))); };
+const classFilter = list => { const w=cq.trim().toLowerCase().split(/\s+/).filter(Boolean); return list.filter(c=>w.every(x=>(c.did+' '+c.homework+' '+c.notes+' '+(c.files||[]).map(f=>f.name).join(' ')).toLowerCase().includes(x))); };
+function drawList(st){ const l=$('#list'); if (!l) return; const all=classesOf(st.id); l.innerHTML=listHTML(classFilter(all), all.length, st); }
+// remember which entries are open, so a re-render (sync, saving) doesn't close them
+document.addEventListener('toggle', e => {
+  const d = e.target; if (!(d instanceof HTMLDetailsElement) || !d.dataset.cid || cq.trim()) return;
+  d.open ? openC.add(d.dataset.cid) : openC.delete(d.dataset.cid);
+  const st = route(), btn = document.querySelector('[data-act="expandAll"]');
+  if (st && btn){ const ids=classFilter(classesOf(st.id)).map(c=>c.id); btn.textContent = ids.every(id=>openC.has(id)) ? 'Collapse all' : 'Expand all'; }
+}, true);
 function stuFeesHTML(st){
   const ms = monthsOf(st).map(m=>feeInfo(st,m));
   const collected = ms.reduce((s,m)=>s+m.paid,0), pending = ms.reduce((s,m)=>s+m.bal,0);
@@ -597,7 +707,7 @@ function render(){
   if (!st && location.hash.startsWith('#student-')) history.replaceState(null,'',location.pathname+location.search);
   app.innerHTML = st ? viewStudent(st) : viewHome();
   const r=$('#rq'); if (r) r.oninput = e => { rq=e.target.value; $('#roster').innerHTML=rosterHTML(); };
-  const c=$('#cq'); if (c) c.oninput = e => { cq=e.target.value; const all=classesOf(st.id); $('#list').innerHTML=listHTML(classFilter(all), all.length, st); };
+  const c=$('#cq'); if (c) c.oninput = e => { cq=e.target.value; drawList(st); };
   const imp=$('#imp'); if (imp) imp.onchange = restore;
 }
 
@@ -609,6 +719,12 @@ const A = {
   stab: d => { stuTab=d.id; render(); },
   month: d => { feeMonth=d.id; render(); },
   togglePast: () => { showPast=!showPast; $('#roster').innerHTML=rosterHTML(); },
+  sortClasses: d => { classSort = classSort==='old' ? 'new' : 'old'; writeJSON(SORT_KEY, classSort); drawList(stu(d)); },
+  expandAll: d => {
+    const ids = classFilter(classesOf(d.id)).map(c=>c.id);
+    if (ids.every(id=>openC.has(id))) ids.forEach(id=>openC.delete(id)); else ids.forEach(id=>openC.add(id));
+    drawList(stu(d));
+  },
   addStudent: () => studentForm(null),
   editStudent: d => studentForm(stu(d)),
   left: d => leftForm(stu(d)),
@@ -623,7 +739,7 @@ const A = {
   },
   addClass: d => classForm(stu(d), null),
   editClass: d => { const c=S.classes[d.id]; classForm(S.students[c.studentId], c); },
-  delClass: d => { close(); confirmBox('Delete this class record?', 'Delete', ()=>{ delete S.classes[d.id]; save(); push('delClass', {id:d.id}); toast('Class deleted'); render(); }); },
+  delClass: d => { close(); confirmBox('Delete this class record?', 'Delete', ()=>{ delete S.classes[d.id]; openC.delete(d.id); save(); push('delClass', {id:d.id}); toast('Class deleted'); render(); }); },
   next: d => nextForm(stu(d)),
   resetNext: d => { putStudent({...stu(d), next:null}); close(); toast('Back to the usual day'); render(); },
   fee: d => feeForm(stu(d), d.m),
